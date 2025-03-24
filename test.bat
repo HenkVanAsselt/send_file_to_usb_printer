@@ -1,0 +1,1 @@
+cargo run -- "ZDesigner ZD421-203dpi ZPL" "C:/projects/Python printer tools/label_samples/japanese_utf8.zpl"
