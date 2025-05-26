@@ -18,7 +18,7 @@ fn read_utf8_file(file_path: &str) -> io::Result<String> {
 
 // The following is borrowed from https://docs.rs/raw-printer/latest/
 #[cfg(target_os = "windows")]
-pub fn write_to_device(printer: &str, payload: &str) -> Result<usize, std::io::Error> {
+pub fn write_to_device(printer: &str, payload: &str) -> Result<usize, io::Error> {
     use std::ffi::CString;
     use std::ptr;
     // use windows::Win32::Foundation::HANDLE;
@@ -79,9 +79,9 @@ pub fn write_to_device(printer: &str, payload: &str) -> Result<usize, std::io::E
             let _ = EndPagePrinter(printer_handle);
             let _ = EndDocPrinter(printer_handle);
             let _ = ClosePrinter(printer_handle);
-            return Ok(bytes_written as usize);
+            Ok(bytes_written as usize)
         } else {
-            return Err(std::io::Error::from(windows::core::Error::from_win32()));
+            Err(std::io::Error::from(windows::core::Error::from_win32()))
         }
     }
 }
@@ -95,7 +95,7 @@ fn enumerate_printers() -> Vec<String>{
         // First, get the required buffer size
         EnumPrintersW(
             PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS,
-            core::ptr::null_mut(),
+            ptr::null_mut(),
             2, // PRINTER_INFO_2
             ptr::null_mut(),
             0,
@@ -112,7 +112,7 @@ fn enumerate_printers() -> Vec<String>{
         let buffer = vec![0u8; needed as usize];
         let success = EnumPrintersW(
             PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS,
-            core::ptr::null_mut(),
+            ptr::null_mut(),
             2, // PRINTER_INFO_2
             buffer.as_ptr() as *mut _,
             needed,

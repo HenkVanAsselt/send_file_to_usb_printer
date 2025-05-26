@@ -1,5 +1,5 @@
 [package]
-name = "send_file_to_usb_printer"
+name = "send_file_to_USB_printer"
 version = "0.1.0"
 edition = "2024"
 
